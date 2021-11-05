@@ -1,0 +1,212 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMT</title>
+    <script src="https://kit.fontawesome.com/e13fb8b113.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/css/all.css">
+    <link rel="stylesheet" href="assets/css/foundation.css">
+</head>
+
+<body>
+    <div class="grid-container">
+        <div id="alert" class="hide" data-closable>
+            <h5 id="alert-title"></h5>
+            <p id="alert-body"></p>
+            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <form id="signupform" class="grid-y hide">
+            <div class="input-group">
+                <span class="input-group-label">
+                    <i class="fas fa-envelope"></i>
+                </span>
+                <input class="input-group-field" type="email" id="remail" placeholder="Email" required>
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-label">
+                    <i class="fas fa-lock"></i>
+                </span>
+                <input class="input-group-field" type="password" id="rpassword" placeholder="Create password" required>
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-label">
+                    <i class="fas fa-lock"></i>
+                </span>
+                <input class="input-group-field" type="password" id="rpassword2" placeholder="Confirm password"
+                    required>
+            </div>
+
+            <div class="input-group-button">
+                <input type="submit" class="button" value="Submit">
+            </div>
+        </form>
+
+        <form id="signinform" class="grid-y hide" method="post">
+            <div class="cell">
+                <div class="input-group">
+                    <span class="input-group-label">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input class="input-group-field" type="email" id="email" name="email" placeholder="Email">
+                </div>
+            </div>
+
+            <div class="cell">
+                <div class="input-group">
+                    <span class="input-group-label">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input class="input-group-field" type="password" id="password" name="password"
+                        placeholder="Password" required>
+                </div>
+            </div>
+
+            <div class="cell">
+                <div class="input-group-button">
+                    <input type="submit" class="button" id="loginbutton" value="Submit">
+                    <input type="hidden" id="userId">
+                </div>
+            </div>
+        </form>
+
+        <div id="chat-div" class="grid-y hide">
+            <div id="chat-messages" class="cell small-12">
+
+            </div>
+            <div id="message-send" class="cell small-12">
+                <div class="cell small-12 grid-x grid-margin-x">
+                    <textarea name="" id="" cols="5" rows="1"></textarea>
+
+                    <button id="send-button" class="button primary small cell small-6"
+                        style="padding:10px;font-size: 1.5rem;">
+                        Send
+                    </button>
+
+                    <button id="leave-button" class="button alert small cell small-6"
+                        style="padding:10px;font-size: 1.5rem;">
+                        Leave
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script src="assets/js/vendor.js"></script>
+<script src="assets/js/foundation.js"></script>
+<script src="assets/js/utils.js"></script>
+<script>
+    $(document).foundation();
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const alert = document.querySelector('#alert');
+    const alertTitle = document.querySelector('#alert-title');
+    const alertBody = document.querySelector('#alert-body');
+    const signupform = document.querySelector('#signupform');
+    const remail = document.querySelector('#remail');
+    const rpwd1 = document.querySelector('#rpassword');
+    const rpwd2 = document.querySelector('#rpassword2');
+    const signinform = document.querySelector("#signinform");
+    const emailInput = document.querySelector('#email');
+    const passwordInput = document.querySelector('#password');
+    const chatDiv = document.querySelector('#chat-div');
+    const userId = document.querySelector('#userId');
+    let email, password;
+
+    socket.on('register', data => {
+        const { userId } = data;
+        userId.value = userId;
+        removeAttribute(signupform, 'class');
+        addAttribute(signupform, 'class', 'grid-y');
+    });
+
+    // User registration
+    addHandler(signupform, 'submit', e => {
+        e.preventDefault();
+        let email = remail.value;
+        let pwd1 = rpwd1.value;
+        let pwd2 = rpwd2.value;
+        socket.emit('register', { email: email, pwd1: pwd1, pwd2: pwd2 });
+    });
+
+    // Registration status
+    socket.on('signup succeeded', () => {
+        log(`Signup Succeeded`);
+        addAttribute(signupform, 'class', 'hide');
+        removeAttribute(signinform, 'class');
+        addAttribute(signinform, 'class', 'grid-y');
+        removeAttribute(alert, 'class');
+        addAttribute(alert, 'class', 'hide');
+    });
+
+    socket.on('signup failed', data => {
+        log(`Signup Failed`);
+        const { cause } = data;
+        removeAttribute(signinform, 'class');
+        addAttribute(signinform, 'class', 'hide');
+        removeAttribute(signupform, 'class');
+        addAttribute(signupform, 'class', 'grid-y');
+        removeAttribute(alert, 'class');
+        addAttribute(alert, 'class', 'callout small alert');
+        alertTitle.innerText = 'Registration Failed';
+        alertBody.innerText = cause;
+        remail.value = "";
+        rpwd1.value = "";
+        rpwd2.value = "";
+    });
+
+    // User signin
+    addHandler(signinform, 'submit', e => {
+        e.preventDefault();
+        let email = emailInput.value;
+        let password = passwordInput.value;
+
+        if (email.length && password.length) {
+            console.log(`\n\n\t\tSign In Credentials Submitted\n\n`);
+            socket.emit('sign in', { email, password })
+        }
+    });
+
+    // Signin Status
+    socket.on('signin succeeded', data => {
+        log(`Sign In successful`);
+        if (data.status) {
+            addAttribute(signinform, 'class', 'hide');
+            removeAttribute(chatDiv, 'class');
+            addAttribute(chatDiv, 'class', 'grid-y lead');
+        }
+    });
+
+    socket.on('signin failed', data => {
+        log(`Sign In failed`);
+        const { cause } = data;
+        removeAttribute(alert, 'class');
+        addAttribute(alert, 'class', 'callout small alert');
+        alertTitle.innerText = 'Sign In Failed';
+        alertBody.innerText = cause;
+
+    });
+
+    window.onbeforeunload = () => {
+        socket.emit("disconnectme");
+    };
+
+    /* window.onunload = () => {
+        socket.emit("disconnectme");
+    }; */
+
+</script>
+
+</html>
