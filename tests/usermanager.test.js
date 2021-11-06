@@ -88,7 +88,9 @@ describe("usermanager class", () => {
     describe("test removeUserById method", () => {
       describe("will pass the ID as a string argument", () => {
         it("getUsers method should return an array of length zero", () => {
-          UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+          let userAdded = false;
+          userAdded = UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+          assert.isTrue(userAdded);
           UM.removeUserById("1234");
           expect(UM.getUsers().length).to.equal(0);
         });
