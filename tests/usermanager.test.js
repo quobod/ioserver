@@ -11,6 +11,7 @@ beforeEach("Instantiate userman class", () => {
 
 afterEach("Nullify userman object", () => {
   log(`\t\tafterEach fired`);
+  UM.removeUsers();
   UM = null;
 });
 
@@ -29,10 +30,12 @@ describe("usermanager class", () => {
 });
 
 describe("usermanager class", () => {
-  describe("test users array instance variable", () => {
-    it("should return an array of one length", () => {
-      UM.addUser("anita@gmail.net", "passed_the_word", 1234);
-      expect(UM.getUsers().length).to.equal(1);
+  describe("testing addUser method", () => {
+    describe("adding one user", () => {
+      it("should return an array of one length", () => {
+        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        expect(UM.getUsers().length).to.equal(1);
+      });
     });
   });
 });
