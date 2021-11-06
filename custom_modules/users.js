@@ -28,57 +28,58 @@ class User {
 
 class UserManager {
   constructor() {
-    this.users = {};
+    this.users = [];
   }
 
   addUser(email, password, id) {
-    const newUser = new User(email, password, id);
-    this.users[`${newUser.getEmail()}`] = newUser;
+    let index = -1;
+
+    index = this.users.findIndex((u) => u.getEmail() == email);
+
+    if (index == -1) {
+      const newUser = new User(email, password, id);
+      this.users.push(newUser);
+    }
   }
 
   removeUserByEmail(email) {
-    if (this.users[`${email}`]) {
-      delete this.users[`${email}`];
-    }
+    this.users = this.users.filter((u) => u.getEmail() != email);
   }
 
   removeUserById(id) {
-    for (let u in this.users) {
-      const user = this.users[u];
-      if ((id = user.getId())) {
-        delete this.users[`${user.getEmail()}`];
-        return;
-      }
-    }
+    this.users = this.users.filter((u) => u.getId() != id);
+  }
+
+  removeUsers() {
+    this.users = [];
   }
 
   getUserByEmail(email) {
-    if (this.users[`${email}`]) {
-      return this.users[`${email}`];
+    let index = -1;
+
+    index = this.users.findIndex((u) => u.getEmail() == email);
+
+    if (index != -1) {
+      return this.users[index];
     }
+
     return null;
   }
 
   getUserById(id) {
-    for (let u in this.users) {
-      const user = this.users[u];
-      if (id == user.getId()) {
-        return user;
-      }
+    let index = -1;
+
+    index = this.users.findIndex((u) => u.getId() == id);
+
+    if (index != -1) {
+      return this.users[index];
     }
+
     return null;
   }
 
   getUsers() {
-    let users = [];
-    if (Object.keys(this.users).length > 0) {
-      for (let u in this.users) {
-        const user = this.users[u];
-        users.push(user);
-      }
-      return users;
-    }
-    return null;
+    return this.users;
   }
 }
 
