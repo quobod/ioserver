@@ -1,4 +1,8 @@
-import { expect, assert, should } from "chai";
+import {
+  expect,
+  assert,
+  should
+} from "chai";
 import userman from "../custom_modules/users.js";
 import {
   errorMessage,
@@ -134,6 +138,7 @@ describe("usermanager class", () => {
         expect(UM.getUsers().length).to.equal(2);
         let user = UM.getUserByEmail("loudon@google.com");
         expect(user).to.not.be.null;
+        expect(user.getEmail()).to.equal("loudon@google.com");
       });
     });
   });
@@ -151,6 +156,7 @@ describe("usermanager class", () => {
         expect(UM.getUsers().length).to.equal(2);
         let user = UM.getUserById("1234");
         expect(user).to.not.be.null;
+        expect(user.getId().toString()).to.equal("1234");
       });
     });
   });
