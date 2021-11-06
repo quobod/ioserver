@@ -3,6 +3,9 @@ class User {
     this.email = email;
     this.password = password;
     this.id = id;
+    this.fname = "";
+    this.lname = "";
+    this.gender = "";
   }
 
   getEmail() {
