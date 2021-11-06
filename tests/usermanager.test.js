@@ -1,16 +1,23 @@
 import { expect, assert, should } from "chai";
 import userman from "../custom_modules/users.js";
+import {
+  errorMessage,
+  fyiMessage,
+  successMessage,
+  warningMessage,
+  infoMessage,
+} from "../custom_modules/messages.js";
 let UM = null;
 
 const log = (arg = "") => console.log(arg);
 
 beforeEach("Instantiate userman class", () => {
-  log(`\t\tbeforeEach fired`);
+  fyiMessage(`\t\tbeforeEach fired`);
   UM = new userman();
 });
 
 afterEach("Nullify userman object", () => {
-  log(`\t\tafterEach fired`);
+  fyiMessage(`\t\tafterEach fired`);
   UM.removeUsers();
   UM = null;
 });
