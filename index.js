@@ -5,29 +5,29 @@ import https from "https";
 import path from "path";
 import { log, cls, successMessage } from "./custom_modules/index.js";
 import userman from "./custom_modules/users.js";
-import {fs} from "mz";
+import { fs } from "mz";
 
 function letsencryptOptions(domain) {
-    const path = '/etc/letsencrypt/live/';
-    return {
-        key: fs.readFileSync(path + domain + '/privkey.pem'),
-        cert: fs.readFileSync(path + domain + '/cert.pem'),
-        ca: fs.readFileSync(path + domain + '/chain.pem')
-    };
+  const path = "/etc/letsencrypt/live/";
+  return {
+    key: fs.readFileSync(path + domain + "/privkey.pem"),
+    cert: fs.readFileSync(path + domain + "/cert.pem"),
+    ca: fs.readFileSync(path + domain + "/chain.pem"),
+  };
 }
 
-const options = letsencryptOptions('rmediatech.com');
+const options = letsencryptOptions("rmediatech.com");
 
 const __dirname = path.resolve(".");
 const UserManager = new userman();
 const app = express();
 const server = https.createServer(options, app);
 // const server = http.createServer(app);
-const io = new Server(server,{
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
 });
 
 // Static assets
@@ -101,11 +101,11 @@ io.on("connection", (socket) => {
   socket.on("disconnecting", () => {
     const user = UserManager.getUserById(socket.conn.id);
     if (null != user) {
-      UserManager.removeUserByEmail(user.getEmail());
+      UserManager.removeUserById(user.getId());
     }
 
     const users = UserManager.getUsers();
-    if (null == users) {
+    if (0 == users.length) {
       log(`\n\n\t\tConnected Users: zero 0\n\n`);
     } else {
       log(`\n\n\t\tConnected Users: ${users.length}\n\n`);

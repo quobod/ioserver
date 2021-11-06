@@ -33,7 +33,9 @@ describe("usermanager class", () => {
   describe("testing addUser method", () => {
     describe("adding one user", () => {
       it("should return an array of one length", () => {
-        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        let userAdded = false;
+        userAdded = UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        assert.isTrue(userAdded);
         expect(UM.getUsers().length).to.equal(1);
       });
     });
@@ -44,8 +46,11 @@ describe("usermanager class", () => {
   describe("testing addUser method", () => {
     describe("adding two users", () => {
       it("should return an array of two length", () => {
-        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
-        UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        let userAdded = false;
+        userAdded = UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        assert.isTrue(userAdded);
+        userAdded = UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        assert.isTrue(userAdded);
         expect(UM.getUsers().length).to.equal(2);
       });
     });
@@ -56,8 +61,11 @@ describe("usermanager class", () => {
   describe("test users array instance variable", () => {
     describe("adding user with an existing email", () => {
       it("should return an array of one length", () => {
-        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
-        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        let userAdded = false;
+        userAdded = UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        assert.isTrue(userAdded);
+        userAdded = UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        assert.isFalse(userAdded);
         expect(UM.getUsers().length).to.equal(1);
       });
     });

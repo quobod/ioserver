@@ -39,7 +39,9 @@ class UserManager {
     if (index == -1) {
       const newUser = new User(email, password, id);
       this.users.push(newUser);
+      return true;
     }
+    return false;
   }
 
   removeUserByEmail(email) {
