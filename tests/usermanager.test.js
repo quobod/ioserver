@@ -104,7 +104,9 @@ describe("usermanager class", () => {
     describe("test removeUserById method", () => {
       describe("will pass the ID as an integer argument", () => {
         it("getUsers method should return an array of length zero", () => {
-          UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+          let userAdded = false;
+          userAdded = UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+          assert.isTrue(userAdded);
           UM.removeUserById("1234");
           expect(UM.getUsers().length).to.equal(0);
         });
@@ -117,8 +119,11 @@ describe("usermanager class", () => {
   describe("usermanager contains 2 users", () => {
     describe("testing getUserByEmail", () => {
       it("should return non-null user", () => {
-        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
-        UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        let userAdded = false;
+        userAdded = UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        assert.isTrue(userAdded);
+        userAdded = UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        assert.isTrue(userAdded);
         expect(UM.getUsers().length).to.equal(2);
         let user = UM.getUserByEmail("loudon@google.com");
         expect(user).to.not.be.null;
@@ -131,8 +136,11 @@ describe("usermanager class", () => {
   describe("usermanager contains 2 users", () => {
     describe("testing getUserById", () => {
       it("should return non-null user", () => {
-        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
-        UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        let userAdded = false;
+        userAdded = UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        assert.isTrue(userAdded);
+        userAdded = UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        assert.isTrue(userAdded);
         expect(UM.getUsers().length).to.equal(2);
         let user = UM.getUserById("1234");
         expect(user).to.not.be.null;
