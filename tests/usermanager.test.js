@@ -41,6 +41,18 @@ describe("usermanager class", () => {
 });
 
 describe("usermanager class", () => {
+  describe("testing addUser method", () => {
+    describe("adding two users", () => {
+      it("should return an array of two length", () => {
+        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        expect(UM.getUsers().length).to.equal(2);
+      });
+    });
+  });
+});
+
+describe("usermanager class", () => {
   describe("test users array instance variable", () => {
     describe("adding user with an existing email", () => {
       it("should return an array of one length", () => {
@@ -86,6 +98,34 @@ describe("usermanager class", () => {
           UM.removeUserById("1234");
           expect(UM.getUsers().length).to.equal(0);
         });
+      });
+    });
+  });
+});
+
+describe("usermanager class", () => {
+  describe("usermanager contains 2 users", () => {
+    describe("testing getUserByEmail", () => {
+      it("should return non-null user", () => {
+        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        expect(UM.getUsers().length).to.equal(2);
+        let user = UM.getUserByEmail("loudon@google.com");
+        expect(user).to.not.be.null;
+      });
+    });
+  });
+});
+
+describe("usermanager class", () => {
+  describe("usermanager contains 2 users", () => {
+    describe("testing getUserById", () => {
+      it("should return non-null user", () => {
+        UM.addUser("anita@gmail.net", "passed_the_word", 1234);
+        UM.addUser("loudon@google.com", "passed_the_word", 4321);
+        expect(UM.getUsers().length).to.equal(2);
+        let user = UM.getUserById("1234");
+        expect(user).to.not.be.null;
       });
     });
   });
